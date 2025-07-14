@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../services/axiosInstance';
 
@@ -7,6 +7,20 @@ const RegistrarDevolucion: React.FC = () => {
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [ejemplares, setEjemplares] = useState<{ codigo: string; nombre: string }[]>([]);
+
+  useEffect(() => {
+    const fetchEjemplares = async () => {
+      try {
+        const response = await axiosInstance.get('/listarEjemplares');
+        setEjemplares(response.data);
+      } catch (err) {
+        console.error('Error al cargar ejemplares', err);
+      }
+    };
+
+    fetchEjemplares();
+  }, []);
 
   const handleDevolucion = async () => {
     try {
@@ -20,8 +34,8 @@ const RegistrarDevolucion: React.FC = () => {
       setError('');
 
       setTimeout(() => {
-      navigate('/libros');
-    }, 2000);
+        navigate('/libros');
+      }, 2000);
     } catch (err: any) {
       const errorMsg = err.response?.data || 'Error al registrar devolución.';
       setError(errorMsg);
@@ -34,13 +48,19 @@ const RegistrarDevolucion: React.FC = () => {
       <h2 className="mb-4">Registrar Devolución</h2>
 
       <div className="mb-3">
-        <label className="form-label">Código del Libro:</label>
-        <input
-          type="text"
-          className="form-control"
+        <label className="form-label">Seleccione un ejemplar a devolver:</label>
+        <select
+          className="form-select"
           value={codigo}
           onChange={(e) => setCodigo(e.target.value)}
-        />
+        >
+          <option value="">-- Seleccione --</option>
+          {ejemplares.map((e) => (
+            <option key={e.codigo} value={e.codigo}>
+              {e.nombre} ({e.codigo})
+            </option>
+          ))}
+        </select>
       </div>
 
       <button onClick={handleDevolucion} className="btn btn-success">
