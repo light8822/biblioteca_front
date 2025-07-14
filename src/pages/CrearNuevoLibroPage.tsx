@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance';
 
 const CrearNuevoLibroPage: React.FC = () => {
   const [nombre, setNombre] = useState('');
@@ -16,7 +16,7 @@ const CrearNuevoLibroPage: React.FC = () => {
     }
 
     try {
-      await axios.post('https://localhost:7185/crearLibro', {
+      await axiosInstance.post('/crearLibro', {
         nombre,
         genero,
         cantidad: 0, // campo oculto

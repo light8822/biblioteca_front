@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance';
 
 const RegistrarDevolucion: React.FC = () => {
   const [codigo, setCodigo] = useState('');
@@ -10,7 +10,7 @@ const RegistrarDevolucion: React.FC = () => {
 
   const handleDevolucion = async () => {
     try {
-      const response = await axios.post('https://localhost:7185/registrarDevolucion', {
+      const response = await axiosInstance.post('/registrarDevolucion', {
         codigo,
       }, {
         headers: { 'Content-Type': 'application/json' }

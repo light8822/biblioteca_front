@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../services/axiosInstance';
 
 interface Libro {
   idLibro: number;
@@ -28,10 +28,12 @@ const AgregarEjemplarPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const libroRes = await axios.get<Libro>(`https://localhost:7185/verLibro?id_libro=${idLibro}`);
+        const libroRes = await axiosInstance.get<Libro>(`/verLibro`, {
+          params: { id_libro: idLibro }
+        });
         setLibro(libroRes.data);
 
-        const estanteRes = await axios.get<Estante[]>(`https://localhost:7185/GetEstantes`);
+        const estanteRes = await axiosInstance.get<Estante[]>(`/GetEstantes`);
         setEstantes(estanteRes.data);
       } catch (err) {
         console.error('Error al obtener información', err);
@@ -42,7 +44,7 @@ const AgregarEjemplarPage: React.FC = () => {
 
   const registrarEjemplar = async () => {
     try {
-      await axios.post(`https://localhost:7185/AgregarItems`, {
+      await axiosInstance.post(`/AgregarItems`, {
         idLibro: Number(idLibro),
         codigo,
         idEstante,
