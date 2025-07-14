@@ -63,6 +63,13 @@ const LibrosPage: React.FC = () => {
       </button>
       &nbsp;
       <button
+        onClick={() => navigate('/devolucion')}
+        className="btn btn-success mb-3"
+      >
+        Registrar Devolución
+      </button>
+      &nbsp;
+      <button
         className="btn btn-success mb-3"
         onClick={() => navigate('/crear-libro')}
       >
