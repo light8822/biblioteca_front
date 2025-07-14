@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../services/axiosInstance';
 
 interface Libro {
   idLibro: number;
@@ -19,7 +19,7 @@ const LibroPage: React.FC = () => {
   useEffect(() => {
     const fetchLibro = async () => {
       try {
-        const res = await axios.get<Libro>('https://localhost:7185/verLibro', {
+        const res = await axiosInstance.get<Libro>('/verLibro', {
           params: { id_libro: id },
         });
         setLibro(res.data);
@@ -41,7 +41,7 @@ const LibroPage: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      await axios.put(`https://localhost:7185/editarLibro`, {
+      await axiosInstance.put('/editarLibro', {
         nombre: libro?.nombre,
         genero: libro?.genero,
         precioAlquiler: libro?.precioAlquiler,

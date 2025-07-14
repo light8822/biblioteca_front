@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance';
 
 interface Libro {
   idLibro: number;
@@ -17,11 +17,8 @@ const LibrosPage: React.FC = () => {
 
   const fetchLibros = async () => {
     try {
-      const res = await axios.get<Libro[]>('https://localhost:7185/listaLibro', {
-        headers: {
-          Accept: 'text/plain',
-        },
-      });
+      const res = await axiosInstance.get<Libro[]>('/listaLibro');
+
       setLibros(res.data);
     } catch (err) {
       console.error('Error al cargar libros', err);
@@ -37,7 +34,7 @@ const LibrosPage: React.FC = () => {
     if (!confirmado) return;
 
     try {
-      await axios.delete(`https://localhost:7185/eliminarLibro`, {
+      await axiosInstance.delete('/eliminarLibro', {
         params: { id_libro: id },
       });
       alert('Libro eliminado exitosamente');

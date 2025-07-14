@@ -16,7 +16,6 @@ const Login: React.FC = () => {
 
       // Guardar los datos en localStorage
       localStorage.setItem('usuario', JSON.stringify(user));
-
       // Redirigir a la vista de libros
       navigate('/libros');
     } catch (err) {

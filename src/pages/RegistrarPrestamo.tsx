@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../services/axiosInstance';
 
 interface Libro {
   idLibro: number;
@@ -27,17 +27,21 @@ const RegistrarPrestamo: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Cargar libros
-    axios.get<Libro[]>('https://localhost:7185/listaLibro', {
-      headers: { Accept: 'text/plain' },
-    }).then(res => setLibros(res.data))
-      .catch(err => console.error('Error al cargar libros', err));
+    const fetchData = async () => {
+      try {
+        const [librosRes, clientesRes] = await Promise.all([
+          axiosInstance.get<Libro[]>('/listaLibro'),
+          axiosInstance.get<Cliente[]>('/listarClientes'),
+        ]);
 
-    // Cargar clientes
-    axios.get<Cliente[]>('https://localhost:7185/listarClientes', {
-      headers: { Accept: 'text/plain' },
-    }).then(res => setClientes(res.data))
-      .catch(err => console.error('Error al cargar clientes', err));
+        setLibros(librosRes.data);
+        setClientes(clientesRes.data);
+      } catch (err) {
+        console.error('Error al cargar datos:', err);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSubmit = async () => {
@@ -50,7 +54,7 @@ const RegistrarPrestamo: React.FC = () => {
     };
 
     try {
-      await axios.post('https://localhost:7185/registrarPrestamo', data, {
+      await axiosInstance.post('/registrarPrestamo', data, {
         headers: { 'Content-Type': 'application/json' },
       });
       alert('Préstamo registrado exitosamente');

@@ -7,5 +7,15 @@ export const login = async (codigo: string, clave: string) => {
       codigo, 
       clave 
   });
-  return response.data;
+
+  const { token, ...userData } = response.data;
+
+  localStorage.setItem('token', token);
+
+  return userData;
+};
+
+export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
 };
